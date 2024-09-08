@@ -1,28 +1,43 @@
 const { test, expect } = require('@playwright/test');
 
-test('When Website URL Launched Then Correct Site Title and Heading Displayed', async ({ page }) => {
+test('When Website Active page URL Launched directly And no todo added Then Correct Site Title and Heading Displayed', async ({ page }) => {
 
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
 
     //Confirming the Title and heading of the page.
-    await expect(page).toHaveURL('https://todomvc.com/examples/javascript-es6/dist/');
+    await expect(page).toHaveURL('https://todomvc.com/examples/javascript-es6/dist/#/active');
     await expect(page).toHaveTitle('TodoMVC: JavaScript Es6 Webpack');
     await expect(page.getByRole('heading', { name: 'todos' })).toBeVisible();
 })
 
-test('Textbox is visible and enabled on page load', async ({ page }) => {
+test('Given Website URL Launched And todo added When Active page navigated Then Correct Site Title and Heading Displayed', async ({ page }) => {
 
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
-    
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
+    await page.getByPlaceholder('What needs to be done?').click();
+    await page.getByPlaceholder('What needs to be done?').fill('Buy Groceries');
+    await page.getByPlaceholder('What needs to be done?').press('Enter');
+
+    await page.getByRole('link', { name: 'Active' }).click();
+
+    //Confirming the Title and heading of the page.
+    await expect(page).toHaveURL('https://todomvc.com/examples/javascript-es6/dist/#/active');
+    await expect(page).toHaveTitle('TodoMVC: JavaScript Es6 Webpack');
+    await expect(page.getByRole('heading', { name: 'todos' })).toBeVisible();
+})
+
+test('Textbox is visible and enabled on Active page load', async ({ page }) => {
+
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
+
     const todoInput = page.getByPlaceholder('What needs to be done?');
     
     await expect(todoInput).toBeVisible();
     await expect(todoInput).toBeEnabled();
 });
 
-test('Given Webpage loaded When page loads Then subText is displayed correctly', async ({ page }) => {
+test('Given Active Webpage loaded When page loads Then subText is displayed correctly', async ({ page }) => {
 
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
     
     const subText1 = page.getByText('Double-click to edit a todo');
     const subText2 = page.getByText('Created by the TodoMVC Team');
@@ -35,7 +50,7 @@ test('Given Webpage loaded When page loads Then subText is displayed correctly',
 
 test('Given Webpage loaded When click on TodoMVC hyperlink Then URL launched', async ({ page }) => {
 
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
  
     await page.getByRole('link', { name: 'TodoMVC' }).click();
 
@@ -45,7 +60,7 @@ test('Given Webpage loaded When click on TodoMVC hyperlink Then URL launched', a
 
 test('Given Website Loaded When Normal Text Entered Then Todo Added', async ({ page }) => {
 
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
 
     await page.getByPlaceholder('What needs to be done?').click();
 
@@ -58,7 +73,7 @@ test('Given Website Loaded When Normal Text Entered Then Todo Added', async ({ p
 
 test('Given Website Loaded When 100 todos added Then Todos displayed in list', async ({ page }) => {
 
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
 
     const todoInput = page.getByPlaceholder('What needs to be done?');
     const todo = 'Buy Bread';
@@ -73,7 +88,7 @@ test('Given Website Loaded When 100 todos added Then Todos displayed in list', a
 
 test('Given Website Loaded When Large Amount Text Entered Then Todo Added', async ({ page }) => {
 
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
 
     await page.getByPlaceholder('What needs to be done?').click();
 
@@ -85,7 +100,7 @@ test('Given Website Loaded When Large Amount Text Entered Then Todo Added', asyn
 
 test('Given Website Loaded When Characters And Numbers Entered Then Todo Added', async ({ page }) => {
 
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
 
     await page.getByPlaceholder('What needs to be done?').click();
 
@@ -97,7 +112,7 @@ test('Given Website Loaded When Characters And Numbers Entered Then Todo Added',
 
 test('Given Website Loaded When Blank Space Entered Then Todo Not Added', async ({ page }) => {
 
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
 
     await page.getByPlaceholder('What needs to be done?').click();
 
@@ -109,7 +124,7 @@ test('Given Website Loaded When Blank Space Entered Then Todo Not Added', async 
 
 test('Given Website Loaded When Text Entered And Click Outside Textbox Then Todo Not Added', async ({ page }) => {
 
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
 
     await page.getByPlaceholder('What needs to be done?').click();
     await page.getByPlaceholder('What needs to be done?').fill('Buy Bread');
@@ -118,9 +133,9 @@ test('Given Website Loaded When Text Entered And Click Outside Textbox Then Todo
     await expect(page.locator('.todo-list li')).toHaveCount(0);
 })
 
-test('Given Todos Added When Mark All As Complete Clicked Then All Items Marked Completed', async ({ page }) => {
+test('Given Todos Added When Mark All As Complete Clicked Then No todos visible in active page', async ({ page }) => {
 
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
 
     await page.getByPlaceholder('What needs to be done?').click();
     await page.getByPlaceholder('What needs to be done?').fill('Buy Bread');
@@ -131,15 +146,12 @@ test('Given Todos Added When Mark All As Complete Clicked Then All Items Marked 
     await page.getByPlaceholder('What needs to be done?').press('Enter');
     await page.getByText('Mark all as complete').click();
 
-    await expect(page.locator('.todo-list li')).toHaveCount(3);
-    await expect(page.locator('div').filter({ hasText: 'Buy Rice' }).getByRole('checkbox')).toBeChecked();
-    await expect(page.locator('div').filter({ hasText: 'Buy Milk' }).getByRole('checkbox')).toBeChecked();
-    await expect(page.locator('div').filter({ hasText: 'Buy Bread' }).getByRole('checkbox')).toBeChecked();
+    await expect(page.locator('.todo-list li')).toHaveCount(0);
 })
 
 test('Given Todos Added And Marked Completed When Mark All As Complete Clicked Then All Items Active', async ({ page }) => {
 
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
 
     await page.getByPlaceholder('What needs to be done?').click();
     await page.getByPlaceholder('What needs to be done?').fill('Buy Bread');
@@ -160,7 +172,7 @@ test('Given Todos Added And Marked Completed When Mark All As Complete Clicked T
 
 test('Given 100 todos active When 50 marked completed Then list Displays update', async ({ page }) => {
 
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
 
     const todoInput = page.getByPlaceholder('What needs to be done?');
 
@@ -172,18 +184,18 @@ test('Given 100 todos active When 50 marked completed Then list Displays update'
     }
 
     for (let j = 0; j < 50; j++) {
-        await page.getByRole('checkbox').nth(j+1).check();
+        await page.getByRole('checkbox').nth(j+1).click();
     }
 
-    await expect(page.locator('.todo-list li')).toHaveCount(100);
+    await expect(page.locator('.todo-list li')).toHaveCount(50);
     for (let j = 0; j < 50; j++) {
-        await expect(page.getByRole('checkbox').nth(j+1)).toBeChecked();
+        await expect(page.getByRole('checkbox').nth(j+1)).not.toBeChecked();
     }  
 })
 
-test('Given 100 todos active When 100 marked completed Then list Displays update', async ({ page }) => {
+test('Given 100 todos active When 100 marked completed Then list has 0 items', async ({ page }) => {
 
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
 
     const todoInput = page.getByPlaceholder('What needs to be done?');
 
@@ -194,42 +206,19 @@ test('Given 100 todos active When 100 marked completed Then list Displays update
         await todoInput.press('Enter');
     }
 
-    for (let j = 0; j < 100; j++) {
-        await page.getByRole('checkbox').nth(j+1).check();
-    }
+    await page.getByText('Mark all as complete').click();
 
-    await expect(page.locator('.todo-list li')).toHaveCount(100);
-    for (let j = 0; j < 100; j++) {
-        await expect(page.getByRole('checkbox').nth(j+1)).toBeChecked();
-    }  
+    await expect(page.locator('.todo-list li')).toHaveCount(0); 
 })
 
 test('Given todo active When double clicked Then able to update', async ({ page }) => {
 
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
     await page.getByPlaceholder('What needs to be done?').click();
     await page.getByPlaceholder('What needs to be done?').fill('Buy Milk');
     await page.getByPlaceholder('What needs to be done?').press('Enter');
     await page.getByPlaceholder('What needs to be done?').fill('Buy Bread');
     await page.getByPlaceholder('What needs to be done?').press('Enter');
-    await page.getByText('Buy Bread').dblclick();
-    await page.getByRole('main').getByRole('textbox').fill('Buy Rice');
-    await page.getByRole('main').getByRole('textbox').press('Enter');
-
-    await expect(page.getByText('Buy Rice')).toHaveCount(1); 
-    await expect(page.getByText('Buy Bread')).toHaveCount(0); 
-})
-
-test('Given todo Completed When double clicked Then able to update', async ({ page }) => {
-
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
-    await page.getByPlaceholder('What needs to be done?').click();
-    await page.getByPlaceholder('What needs to be done?').fill('Buy Milk');
-    await page.getByPlaceholder('What needs to be done?').press('Enter');
-    await page.getByPlaceholder('What needs to be done?').fill('Buy Bread');
-    await page.getByPlaceholder('What needs to be done?').press('Enter');
-    await page.getByText('Mark all as complete').click();
-
     await page.getByText('Buy Bread').dblclick();
     await page.getByRole('main').getByRole('textbox').fill('Buy Rice');
     await page.getByRole('main').getByRole('textbox').press('Enter');
@@ -240,7 +229,7 @@ test('Given todo Completed When double clicked Then able to update', async ({ pa
 
 test('Given todos Added and Active When page loaded Then X not visible by default', async ({ page }) => {
 
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
 
     await page.getByPlaceholder('What needs to be done?').click();
     await page.getByPlaceholder('What needs to be done?').fill('Buy Milk');
@@ -251,7 +240,7 @@ test('Given todos Added and Active When page loaded Then X not visible by defaul
 
 test('Given todos Added When Hovered over todo item Then X appears', async ({ page }) => {
 
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
     
     await page.getByPlaceholder('What needs to be done?').click();
     await page.getByPlaceholder('What needs to be done?').fill('Buy Bread');
@@ -263,7 +252,7 @@ test('Given todos Added When Hovered over todo item Then X appears', async ({ pa
 
 test('Given todo Added when X clicked to delete items Then no todos present', async ({ page }) => {
 
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
     await page.getByPlaceholder('What needs to be done?').click();
     await page.getByPlaceholder('What needs to be done?').fill('Buy Bread');
     await page.getByPlaceholder('What needs to be done?').press('Enter');
@@ -274,10 +263,11 @@ test('Given todo Added when X clicked to delete items Then no todos present', as
     await expect(page.locator('.todo-list li')).toHaveCount(0);
 })
 
-test('Given Todos Added And Marked Completed When Completed Items checkbox Clicked Then All Items Active', async ({ page }) => {
+test('Given Todos Added And Marked Completed When Mark all as completed arrow Clicked Then All Items Active', async ({ page }) => {
 
-    await page.goto('https://todomvc.com/examples/javascript-es6/dist/');
+    await page.goto('https://todomvc.com/examples/javascript-es6/dist/#/active');
 
+    //Add the todos and mark them completed
     await page.getByPlaceholder('What needs to be done?').click();
     await page.getByPlaceholder('What needs to be done?').fill('Buy Bread');
     await page.getByPlaceholder('What needs to be done?').press('Enter');
@@ -287,10 +277,10 @@ test('Given Todos Added And Marked Completed When Completed Items checkbox Click
     await page.getByPlaceholder('What needs to be done?').press('Enter');
     await page.getByText('Mark all as complete').click();
 
-    for (let j = 0; j < 3; j++) {
-        await page.getByRole('checkbox').nth(j+1).click();
-    }
+    //Mark the completed todos back active
+    await page.getByText('Mark all as complete').click();
 
+    //confirm change
     await expect(page.locator('.todo-list li')).toHaveCount(3);
     await expect(page.locator('div').filter({ hasText: 'Buy Rice' }).getByRole('checkbox')).not.toBeChecked();
     await expect(page.locator('div').filter({ hasText: 'Buy Milk' }).getByRole('checkbox')).not.toBeChecked();
